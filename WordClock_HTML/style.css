@@ -1,0 +1,62 @@
+/* Variables */
+:root {
+	--fg-color: rgb(54, 172, 80);
+	--bg-color: #202020;
+	--ia-color-1: #81848a;
+	--ia-color-2: #42484e;
+}
+
+/* Generic styles */
+html,
+body {
+	margin: 0;
+}
+
+body {
+	background-color: var(--bg-color);
+	color: var(--fg-color);
+	font-family: 'Trebuchet MS', sans-serif;
+	font-weight: bold;
+}
+
+/* Styles for active and inactive cells */
+.cell.inactive span {
+	background: radial-gradient(
+		circle,
+		var(--ia-color-1) 0%,
+		var(--ia-color-2) 75%
+	);
+	background-clip: text;
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+}
+
+.cell.active span {
+	color: var(--fg-color);
+	text-shadow: 0 0 0.15em var(--fg-color);
+}
+
+/* Generic table styles */
+#clock {
+	display: grid;
+	border: 3px solid var(--fg-color);
+	width: min(80vw, 80vh);
+	margin: auto;
+	margin-top: min(10vw, 10vh);
+}
+
+.cell {
+	position: relative;
+	aspect-ratio: 1/1;
+}
+
+.cell span {
+	display: block;
+
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+
+	user-select: none;
+}
