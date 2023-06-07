@@ -135,7 +135,7 @@ const getActivated = {
 		activated = fillValues(activated, values.ist);
 
 		// Minutes (rounded to nearest multiple of 5)
-		minutes = closestValue(minutes, [0, 5, 10, 15, 20, 30, 45, 50, 55]);
+		minutes = closestValue(minutes, [0, 5, 10, 15, 20, 30, 40, 45, 50, 55]);
 		if (minutes){
 			if (minutes < 30){
 				activated = fillValues(activated, values.nach);
@@ -202,7 +202,7 @@ function initialize(language, settings){
 function update(language){
 	let func = getActivated[language];
 	let date = new Date();
-	let activated = func(date.getHours(), date.getMinutes())
+	let activated = func(date.getHours(), date.getMinutes());
 	for (let y = 0; y < activated.length; y++){
 		for (let x = 0; x < activated[0].length; x++){
 
