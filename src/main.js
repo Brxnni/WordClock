@@ -10,7 +10,7 @@ function fillValues(array, coords){
 }
 
 function closestValue(value, list){
-	list.sort((a,b) => -(value-a)-(value-b))
+	list.sort((a,b) => -(value-a)-(value-b));
 	return list[0];
 }
 
@@ -124,7 +124,7 @@ const getActivated = {
 			"suf_5": [[6,7],[6,10]],
 			"suf_6": [[9,1],[9,5]],
 			"suf_7": [[5,5],[5,10]],
-			"suf_8": [[9,1],[9,4]],
+			"suf_8": [[8,1],[8,4]],
 			"suf_9": [[7,3],[7,6]],
 			"suf_10": [[8,5],[8,8]],
 			"suf_11": [[7,0],[7,2]],
@@ -135,14 +135,28 @@ const getActivated = {
 		activated = fillValues(activated, values.ist);
 
 		// Minutes (rounded to nearest multiple of 5)
-		minutes = closestValue(minutes, [0, 5, 10, 15, 20, 30, 40, 45, 50, 55]);
+		minutes = closestValue(minutes, [0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55]);
 		if (minutes){
-			if (minutes < 30){
+			// "Fünf vor halb..."
+			if (minutes == 25){
+				activated = fillValues(activated, values.pre_5);
+				activated = fillValues(activated, values.vor);
+				activated = fillValues(activated, values.halb);
+				hours += 1;
+			// "... vor ..."
+			} else if (minutes < 30){
 				activated = fillValues(activated, values.nach);
 				activated = fillValues(activated, values[`pre_${minutes}`]);
+			// "Halb ..."
 			} else if (minutes == 30){
 				activated = fillValues(activated, values.halb);
-				hours -= 1;
+				hours += 1;
+			// "Fünf nach halb ..."
+			} else if (minutes == 35){
+				activated = fillValues(activated, values.pre_5);
+				activated = fillValues(activated, values.nach);
+				activated = fillValues(activated, values.halb);
+				hours += 1;
 			} else if (minutes > 30){
 				activated = fillValues(activated, values.vor);
 				minutes = 60 - minutes;
@@ -158,26 +172,21 @@ const getActivated = {
 		if (hours == 0) hours = 12;
 
 		// "Es ist Fünf nach eins", not "Es ist Fünf nach ein"
-		if (hours != 1) activated = fillValues(activated, values[`suf_${hours}`])
-		else activated = fillValues(activated, values[`suf_1_1`])
+		if (hours == 1 && minutes != 0) activated = fillValues(activated, values.suf_1_1);
+		else activated = fillValues(activated, values[`suf_${hours}`]);
 
 		return activated;
 	}
 }
 
-let width;
 let height;
-let currentChars;
 
-function initialize(language, settings){
-
-	currentChars = clockChars[language];
+function initialize(language){
+	let currentChars = clockChars[language];
+	let width = currentChars[0].length;
 	height = currentChars.length;
-	width = currentChars[0].length;
 
 	let clockTable = document.getElementById("clock");
-	clockTable.style.gridTemplateRows = `repeat(${height}, ${100/height}%)`;
-	clockTable.style.gridTemplateColumns = `repeat(${width}, ${100/width}%)`;
 	
 	for (let y = 0; y < height; y++){
 		for (let x = 0; x < width; x++){
@@ -189,14 +198,12 @@ function initialize(language, settings){
 			cell.innerHTML = `<span>${currentChars[y][x]}</span>`;
 
 			cell.style.gridArea = `${y+1} / ${x+1} / ${y+1} / ${x+1}`;
-			
-			if (settings.clockAlwaysSquare) cell.style.aspectRatio = `${height} / ${width}`;
+			cell.style.aspectRatio = `${height} / ${width}`;
 
 			clockTable.appendChild(cell);
 			
 		}
 	}
-
 }
 
 function update(language){
@@ -229,9 +236,8 @@ if (!param){
 
 const language = param || "DE";
 
-initialize(language, {
-	clockAlwaysSquare: true
-});
+// Initialize grid with squares
+initialize(language);
 
 window.addEventListener("resize", updateResize);
 updateResize();
