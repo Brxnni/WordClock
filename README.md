@@ -4,7 +4,7 @@ Supports German and English.
 
 [Check it out here!](https://brxnni.github.io/WordClock/src/?language=EN)
 
-(Change the `language` parameter in the URL from `EN` to `DE` to view the German version! ) 
+(Change the `language` parameter in the URL from `EN` to `DE` to view the German version! 🇩🇪) 
 
 (If you can't see the flag, perhaps you should download my cool [Chrome Extension](https://github.com/Brxnni/ChromeFlagEmojis)! which is not on the chrome store yet because im lazy)
 
